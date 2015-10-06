@@ -24,13 +24,14 @@ class Main extends CI_Controller {
 		$page = ($this->uri->segment(3)) ? $this->uri->segment(3) : 0;
 		
 		$result = $this->Voter_model->getVoters(array(
-			'FLASTNAME' => $this->input->post('fl_input'),
-			'FFIRSTNAME' => $this->input->post('ff_input')
+			'FLASTNAME' => $this->input->post('input_ln'),
+			'FFIRSTNAME' => $this->input->post('input_fn'),
+			'FMATERNALNAME' => $this->input->post('input_mn')
 		), $config['per_page'], $page);
 
 		$config["total_rows"] = $this->Voter_model->rec_count;		
 		//config for bootstrap pagination class integration
-        $config['full_tag_open'] = '<ul class="pagination">';
+        $config['full_tag_open'] = '<ul class="pagination" style="padding-top: 10px">';
         $config['full_tag_close'] = '</ul>';
         //$config['first_link'] = '<span aria-hidden="true">&laquo;</span>';
         //$config['last_link'] = '<span aria-hidden="true">&raquo;</span>';
@@ -72,7 +73,7 @@ class Main extends CI_Controller {
 		$data['tblGrid'] = $this->table->generate($result);
 		
 		$this->load->view('templates/header');
-		//$this->load->view('templates/navbar', $info);
+		$this->load->view('templates/navbar', $info);
 		$this->load->view('main_view',$data);
 		$this->load->view('templates/footer');
 	}
