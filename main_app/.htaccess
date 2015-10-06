@@ -1,6 +1,6 @@
 <IfModule mod_rewrite.c>
 	RewriteEngine On
-	RewriteBase /precint_app/main_app/
+	RewriteBase /precinct_app/main_app/
 	RewriteCond %{REQUEST_URI} ^system.*
 	RewriteCond $1 !^(index\.php|images|js|uploads|css|robots\.txt)
 	RewriteRule ^(.*)$ /index.php/$1 [L]

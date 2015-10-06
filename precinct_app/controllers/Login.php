@@ -4,7 +4,7 @@ class Login extends CI_Controller {
 
 	function index() {
 		if($this->session->userdata('isLoggedIn')) {
-			//redirect('');
+			redirect('Main/show_main');
 		} else {
 			$this->show_login(false);
 		}
@@ -19,5 +19,22 @@ class Login extends CI_Controller {
 		$this->load->view('templates/footer');
 	}
 	
+	function login_user() {
+		$this->load->model('User_model');
+		
+		$user = $this->input->post('user_input');
+		$pass = $this->input->post('pass_input');
+		
+		if($user && $pass && $this->User_model->validate_user($user, $pass)) {
+			redirect('Main/show_main');
+		} else {
+			$this->show_login(true);
+		}
+	}
+	
+	function logout_user() {
+		$this->session->sess_destroy();
+		$this->index();
+	}
 	
 }
