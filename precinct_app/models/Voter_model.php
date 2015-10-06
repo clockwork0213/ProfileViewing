@@ -4,16 +4,27 @@ class Voter_model extends CI_Model {
 	
 	var $rec_count;
 	
-	function getVoters($myFilter, $rows, $start) {
+	function getRec($myFilter) {
 		$myFilter = array_filter($myFilter);
-		$this->db->select('ID, FLASTNAME, FFIRSTNAME, FMATERNALNAME, SEX, CIVILSTATUS');
 		if(!empty($myFilter)) $this->db->where($myFilter);
+		$this->db->select('ID, FLASTNAME, FFIRSTNAME, FMATERNALNAME, SEX, CIVILSTATUS');
+		$qry = $this->db->get('voter_info');
+		return $qry->num_rows();
+	}
+	
+	function getVoters($myFilter, $rows, $start) {
+	
+		$this->rec_count = $this->getRec($myFilter);
+		
+		$myFilter = array_filter($myFilter);
+		if(!empty($myFilter)) $this->db->where($myFilter);
+		$this->db->select('ID, FLASTNAME, FFIRSTNAME, FMATERNALNAME, SEX, CIVILSTATUS');
+		$this->db->order_by('FLASTNAME', 'DESC');
 		$this->db->limit($rows, $start);
-		$this->db->order_by('FLASTNAME', 'ASC');
-		$rows = $this->db->get('voter_info')->result_array();
-		$rec_count = $this->db->count_all_results();
+		$qry = $this->db->get('voter_info');
+		$rows = $qry->result_array();
 		foreach($rows as &$row) {
-			array_unshift($row, "<a href='" . site_url() . "Main/view_voter/" .
+			array_unshift($row, "<a href='" . site_url() . "Main/detailed_voter_info/" .
 			$row['ID'] . "' class=\"btn btn-sm btn-info\" data-toggle='modal'
 			data-target='#voterView'>View</a>");
 		}

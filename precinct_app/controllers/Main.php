@@ -7,22 +7,28 @@ class Main extends CI_Controller {
 		
 		if(!$this->session->userdata('isLoggedIn')) {
 			redirect('/Login/show_login');
+		} else {					
+			$this->load->library('table');
+			$this->load->library('pagination');
+			$this->load->helper('form');
+			$this->load->model('Voter_model');
 		}
 	}
 	
 	function show_main() {
-		$this->load->model('Voter_model');
 		$info['fullname'] = $this->session->userdata('fullname');
-		
-		$this->load->library('table');
-		$this->load->library('pagination');
-		$this->load->helper('form');
-		
+
 		$config = array();
-		$config["base_url"] = site_url() . "Main/show_main";		
-		$config["total_rows"] = $this->Voter_model->rec_count;
+		$config["base_url"] = site_url() . "Main/show_main";
 		$config['per_page'] = ($this->input->post('sel')) ? $this->input->post('sel') : 10;	
+		$page = ($this->uri->segment(3)) ? $this->uri->segment(3) : 0;
 		
+		$result = $this->Voter_model->getVoters(array(
+			'FLASTNAME' => $this->input->post('fl_input'),
+			'FFIRSTNAME' => $this->input->post('ff_input')
+		), $config['per_page'], $page);
+
+		$config["total_rows"] = $this->Voter_model->rec_count;		
 		//config for bootstrap pagination class integration
         $config['full_tag_open'] = '<ul class="pagination">';
         $config['full_tag_close'] = '</ul>';
@@ -47,11 +53,6 @@ class Main extends CI_Controller {
 		
 		$data['links'] = $this->pagination->create_links();
 		
-		$page = ($this->uri->segment(3)) ? $this->uri->segment(3) : 0;
-		$result = $this->Voter_model->getVoters(array(
-			'FLASTNAME' => $this->input->post('fl_input'),
-			'FFIRSTNAME' => $this->input->post('ff_input')
-		), $config['per_page'], $page);
 		$this->table->set_heading(array(
 			'DETAILED VIEW',
 			'ID',
@@ -73,7 +74,11 @@ class Main extends CI_Controller {
 		$this->load->view('templates/header');
 		//$this->load->view('templates/navbar', $info);
 		$this->load->view('main_view',$data);
-		echo 'ertert'.$this->Voter_model->rec_count;
 		$this->load->view('templates/footer');
+	}
+	
+	function detailed_voter_info($vID) {
+		$data['result'] = $this->Voter_model->view_voter($vID);
+		$this->load->view('detailed_view', $data);
 	}
 }

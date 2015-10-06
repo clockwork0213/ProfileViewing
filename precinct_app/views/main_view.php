@@ -17,14 +17,14 @@
 				<?php echo form_open('Main/getVoters'); ?>
 				<?php echo form_dropdown('sel', $options, '', array('onChange' => 'this.form.submit()')); ?>
 				</form>
-				<?php echo 'eto un'.$links; ?>
+				<?php echo $links; ?>
 			</div>
 		</div>
 	</div>
 	
 	<!--MODAL DETAILED VIEW-->
-	<div id="detailedView" class="modal fade" role="dialog">
-		<div class="modal-dialog modal-md">
+	<div id="voterView" class="modal fade" role="dialog">
+		<div class="modal-dialog modal-xs">
 			<!--MODAL CONTENT-->
 			<div class="modal-content"></div>
 		</div>
